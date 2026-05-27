@@ -59,7 +59,7 @@ export default function CreatePost() {
       {preview && (
         <div className="relative rounded-xl overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="" className="w-full max-h-48 object-cover" />
+          <img src={preview} alt="preview" className="w-full max-h-48 object-cover" />
           <button
             onClick={removeImage}
             className="absolute top-2 right-2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
@@ -75,7 +75,7 @@ export default function CreatePost() {
             onClick={() => fileRef.current?.click()}
             className="btn-ghost gap-1.5 text-xs py-1.5 px-2"
           >
-            <Image size={16} /> Photo
+            <Image size={16}/> Photo
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImage} />
           <span>{body.length}/500</span>

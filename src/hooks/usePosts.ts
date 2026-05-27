@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import type { Post, CreatePostPayload } from "@/types";
-import { postsApi } from "@/lib/api";
+import { postsApi, usersApi } from "@/lib/api";
 import { queryKeys } from "@/lib/queryClient";
 import { getPostId } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ export function useUserPosts(userId: string) {
 
   return useQuery({
     queryKey: queryKeys.posts.userPosts(userId),
-    queryFn: () => postsApi.getUserPosts?.(token, userId) ?? Promise.resolve([]),
+    queryFn: () => usersApi.getUserPosts?.(token, userId) ?? Promise.resolve([]),
     enabled: !!token && !!userId,
   });
 }
