@@ -1,12 +1,18 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  // بنحاول نجيب التوكن المفرود على الدومين الحالي
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // لو المستخدم مش مسجل دخول وبيحاول يدخل صفحة محمية
+  // هنا بنجيب التوكن وبنضيف السطرين دول عشان يقرأ الكوكيز المؤمنة على فيرسيل وعلى اللوكال في نفس الوقت
+  const token = await getToken({ 
+    req, 
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production" // سطر حل اللغز!
+  });
+
+  // لو المستخدم معندوش توكن وبيحاول يدخل صفحة محمية
   if (!token) {
     const loginUrl = new URL("/auth/login", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
@@ -14,8 +20,9 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next();
-} // <-- القوس ده بيقفل الدالة هنا بشكل مستقل
+}
 
+// المسارات المحمية
 export const config = {
   matcher: ["/feed", "/profile", "/notifications", "/users"],
 };
