@@ -20,11 +20,12 @@ export default function LoginPage() {
       const res = await signIn("credentials", {
         email: form.email,
         password: form.password,
-        redirect: false,
+        callbackUrl:"/feed",
+        redirect: true,
       });
       if (res?.ok) {
         toast.success("Welcome back!");
-        router.push("/feed");
+        // router.push("/feed");
       } else {
         toast.error("Invalid email or password");
       }
